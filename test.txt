@@ -1,0 +1,69 @@
+import { Action, Ctx, On, Start, Update } from '@maks1ms/nestjs-telegraf';
+import { Context, Markup, Scenes } from 'telegraf';
+import { SceneContext } from 'telegraf/typings/scenes';
+
+@Update()
+export class BotUpdate {
+  @Start()
+  async start(ctx: Context) {
+    console.log(ctx.from);
+    // await ctx.reply(
+    //   'Assalomu Aleykum qaysi tilni tanlaysiz?',
+    //   Markup.keyboard([["O'zbek tili"], ['Ruz Tili']]),
+    // )
+    // await ctx.reply(
+    //   'Assalomu Aleykum! Qaysi tilni tanlaysiz?',
+    //   Markup.inlineKeyboard([
+    //     Markup.button.callback("O'zbek tili", 'uzbek'),
+    //     Markup.button.callback('Русский язык', 'rus'),
+    //   ]),
+    // );
+
+    const userId = ctx.from?.id;
+    const CHANNEL_ID_1 = '@Saidkamol_Saymamutov';
+
+    const member = await ctx.telegram.getChatMember(CHANNEL_ID_1, userId!);
+    const statuses = ['member', 'administrator', 'creator'];
+
+    if (statuses.includes(member.status)) {
+      await ctx.reply(
+        'Assalamu alaykum ! Qaysi tili tanlaysiz ?',
+        Markup.inlineKeyboard([
+          Markup.button.callback("🇺🇿 O'zbek tili", 'uzbek'),
+          Markup.button.callback('🇷🇺 Rus tili', 'rus'),
+        ]),
+      );
+    } else {
+      await ctx.reply(
+        "❌ Siz hali kanallarga obuna bo‘lmadingiz. Iltimos, avval obuna bo‘ling!",
+        Markup.inlineKeyboard([
+          [Markup.button.url("📢 1-kanalga obuna bo‘lish", `https://t.me/${CHANNEL_ID_1.replace("@", "")}`)],
+          [Markup.button.url("📢 2-kanalga obuna bo‘lish", `https://www.instagram.com/saidkamolofficial?igsh=Mm16ajI4dXBvNWM3`)],
+          [Markup.button.callback("✅ Obuna bo‘ldim", "check_subscribe")]
+        ])
+      );
+    }
+  }
+
+  @Action('uzbek')
+  uzbek(ctx: Context) {
+    ctx.reply('Siz Uzbek Tilini tanladingiz');
+  }
+
+  @Action('rus')
+  rus(ctx: Context) {
+    ctx.reply('Siz Rus Tilini tanladingiz');
+  }
+
+  @On('text')
+  OnText(ctx: Context) {
+    ctx.reply(
+      'Siz nomalum commandadan foydalandingiz iltimos qoidalarga amal qiling',
+    );
+  }
+
+  @On('sticker')
+  OnStiker(ctx: Context) {
+    ctx.reply('✅');
+  }
+}
