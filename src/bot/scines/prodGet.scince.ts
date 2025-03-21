@@ -31,17 +31,6 @@ export class ProdGet_scince {
       ctx.scene.leave();
       return;
     }
-    
-
-    // let message = prod.map(
-    //   (prod, index) => 
-    //   `📌 *Product raqam #${index + 1}* \n` +
-    //   `🆔 *Product Id raqami:* ${prod.id}\n` +
-    //   `👤 *Name:* ${prod.name}\n` +
-    //   `👤 *Price:* ${prod.price}\n` +
-    //   `📞 *Color:* ${prod.color}\n`
-    // ).join("\n──────────────────\n");
-
     let escapeMarkdown = (text: string) =>
       text.replace(/[_*[\]()~`>#\+\-=|{}.!]/g, "\\$&");    
 
