@@ -32,9 +32,7 @@ export class ProdDelete_scince {
     let id = message.text;
     
 
-    let chechProd = await this.prisma.product.findFirst({ where: { id } });
-
-    console.log(chechProd);
+    let chechProd = await this.prisma.product.findFirst({ where: { id: Number(id) } });
 
     if (!chechProd) {
       await ctx.reply('Bunday ID lik product topilmadi❌');
