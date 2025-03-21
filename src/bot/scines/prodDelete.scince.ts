@@ -29,7 +29,7 @@ export class ProdDelete_scince {
 
   @WizardStep(2)
   async getDel(@Ctx() ctx: Scenes.WizardContext, @Message() message: any) {
-    let id = message.text;
+    let id = Number(message.text)
     
 
     let chechProd = await this.prisma.product.findFirst({ where: { id: Number(id) } });

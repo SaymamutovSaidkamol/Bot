@@ -35,11 +35,11 @@ export class ProdPatch_scince {
 
   @WizardStep(2)
   async getButtons(@Ctx() ctx: Scenes.WizardContext, @Message() message: any) {
-    date.id = message.text;
+    date.id = (message.text);
 
     let { id } = date;
 
-    let checkProd = await this.prisma.product.findFirst({ where: { id: Number(id) } });
+    let checkProd = await this.prisma.product.findFirst({ where: { id: Number(date.id) } });
 
     if (!checkProd) {
       await ctx.reply('Product topilmadi❌', {
