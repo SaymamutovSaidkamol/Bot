@@ -41,7 +41,7 @@ export class ProdDelete_scince {
       ctx.scene.leave();
       return;
     }
-    let delProd = await this.prisma.product.delete({ where: { id } });
+    let delProd = await this.prisma.product.delete({ where: { id: Number(id) } });
 
     await ctx.reply("Product muvaffaqiyatlik o'chirildi✅")
     // ctx.wizard.next();
