@@ -22,30 +22,21 @@ export class ProdGet_scince {
   
   @WizardStep(1)
   async getName(@Ctx() ctx: Scenes.WizardContext) {
-    let prod = await this.prisma.product.findMany()
+    let prod = await this.prisma.users.findMany({where: {userId: String(ctx.from?.id)}})
 
-    console.log(prod);
-    
     if (prod.length === 0) {
-      await ctx.reply("🛑 Hech qanday foydalanuvchi topilmadi.");
+      await ctx.reply("🛑 Sizning Xisobingiz topilmadi.");
       ctx.scene.leave();
       return;
     }
-    let escapeMarkdown = (text: string) =>
-      text.replace(/[_*[\]()~`>#\+\-=|{}.!]/g, "\\$&");    
 
     let message = prod.map(
       (prod, index) =>
-        `📌 *Product raqam #${index + 1}* \n` +
-        `🆔 *Product Id raqami:* ${(prod.id)}\n` +
-        `👤 *Name:* ${escapeMarkdown(prod.name)}\n` +
-        `💰 *Price:* ${prod.price}\n` +
-        `🎨 *Color:* ${escapeMarkdown(prod.color)}\n`
+        `🆔 *👤 Sizning ID raqamingiz:* ${prod.userId}\n` +
+        `👤 *💵 Balansingiz:* ${(prod.balans)|| 0}\n`
     ).join("\n──────────────────\n");
 
-    await ctx.replyWithMarkdown(message, {
-      reply_markup: { remove_keyboard: true },
-    });
+    await ctx.replyWithMarkdown(message);
 
     ctx.scene.leave();
   }

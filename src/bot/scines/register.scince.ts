@@ -7,8 +7,7 @@ import {
   WizardStep,
 } from '@maks1ms/nestjs-telegraf';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { Context, Markup, Scenes } from 'telegraf'
-
+import { Context, Markup, Scenes } from 'telegraf';
 
 let date = {
   firtsName: '',
@@ -21,7 +20,7 @@ let date = {
 export class RegisterScene {
   constructor(private readonly prisma: PrismaService) {}
   @WizardStep(1)
-  async getName(@Ctx() ctx: Scenes.WizardContext) {
+  async getName(@Ctx() ctx: Scenes.WizardContext, @Message() message: any) {
     await ctx.reply('2-Chi Qadam!', {
       reply_markup: { remove_keyboard: true },
     });

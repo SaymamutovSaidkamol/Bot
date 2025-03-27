@@ -1,20 +1,53 @@
 import { Action, Ctx, On, Start, Update } from '@maks1ms/nestjs-telegraf';
-import { verify } from 'crypto';
 import { Context, Markup, Scenes } from 'telegraf';
-import { SceneContext } from 'telegraf/typings/scenes';
-import { RegisterScene } from './scines/register.scince';
 import { PrismaService } from 'src/prisma/prisma.service';
-
 @Update()
 export class BotUpdate {
   constructor(private readonly prisma: PrismaService) {}
 
   @Start()
-  async start(ctx: Context) {
-    await ctx.reply(
-      'Assalomu Aleykum😊\nBotimizga Xush Kelibsiz!\nBotdan foydalanish uchun Iltimos Quyidagi amallarni bajaring',
-      Markup.keyboard([['Boshlash']]).resize(),
-    );
+  async start(ctx: Scenes.WizardContext) {
+    const userId = ctx.from?.id;
+    const CHANNEL_ID_1 = '@Saidkamol_Saymamutov';
+    const member = await ctx.telegram.getChatMember(CHANNEL_ID_1, userId!);
+    const statuses = ['member', 'administrator', 'creator'];
+
+    let ChechAdmin = await this.prisma.users.findFirst({
+      where: { role: 'ADMIN', userId: String(ctx.from?.id) },
+    });
+
+    let ChechRegister = await this.prisma.users.findFirst({
+      where: { userId: String(ctx.from?.id) },
+    });
+
+    if (ChechAdmin) {
+      ctx.reply(
+        'Admin Panelga Xush Kelibsiz😊',
+        Markup.keyboard([
+          ['Userlar hisobini tuldirish', "Reklama Yaratish"]
+        ]).resize(),
+      );
+      return;
+    }
+    if (!ChechRegister) {
+      await ctx.scene.enter('create_product');
+      return;
+    }
+
+    if (statuses.includes(member.status)) {
+      ctx.reply(
+        'Siz Asosiy menyudasiz',
+        Markup.keyboard([
+          ['Hisobim', "hisob to'dirish"],
+          ['Prezentatsiya yaratish'],
+        ]).resize(),
+      );
+    } else {
+      await ctx.reply(
+        'Assalomu Aleykum😊\nBotimizga Xush Kelibsiz!\nBotdan foydalanish uchun Iltimos Quyidagi amallarni bajaring',
+        Markup.keyboard([['Boshlash']]).resize(),
+      );
+    }
   }
 
   @On('text')
@@ -37,53 +70,63 @@ export class BotUpdate {
       if (!checkUser) {
         ctx.reply(
           "Xurmatlik foydalanuvchi sz Xali ro'yxatdan o'tmagansiz",
-          Markup.keyboard([
-            ["Ro'yxatdan o'tish"],
-          ]).resize(),
+          Markup.keyboard([["Ro'yxatdan o'tish"]]).resize(),
         );
         return;
       }
 
       ctx.reply(
-        'Productlar',
+        'Siz Asosiy menyudasiz',
         Markup.keyboard([
-          ['🟢Post🟢', '🔵Get🔵'],
-          ['🟣Patch🟣', '🔴Delete🔴'],
+          ['Hisobim', "hisob to'dirish"],
+          ['Prezentatsiya yaratish'],
         ]).resize(),
       );
     }
     if (ctx.text === "Ro'yxatdan o'tish") {
       await ctx.scene.enter('create_product');
-      return
+      return;
+    }
+    if (ctx.text === "Userlar hisobini tuldirish") {
+      await ctx.scene.enter('admin-panel-1');
+      return;
     }
 
-    if (ctx.text === "🔵Get🔵") {
+    if (ctx.text === 'Hisobim') {
       await ctx.scene.enter('prodGet_scince');
-      return
+      return;
     }
-    if (ctx.text === "🟢Post🟢") {
+    if (ctx.text === "hisob to'dirish") {
       await ctx.scene.enter('prodCreate_scince');
-      return
+      return;
     }
-    if (ctx.text === "🟣Patch🟣") {
+    if (ctx.text === 'Prezentatsiya yaratish') {
       await ctx.scene.enter('prodPatch_scince');
-      return
-    }
-    if (ctx.text === "🔴Delete🔴") {
-      await ctx.scene.enter('prodDelete_scince');
-      return
+      return;
     }
   }
 
   @Action('check_subscribe')
   async verify(@Ctx() ctx: Scenes.WizardContext) {
     let obuna = await checkCHANNEL(ctx);
-
     if (obuna === true) {
       if (!ctx.scene) {
         await ctx.reply('❌ Xatolik: Sahna mavjud emas!');
       } else {
-        await ctx.scene.enter('create_product'); // Sahna nomi to‘g‘ri bo‘lishi kerak
+        let checkUser = await this.prisma.users.findFirst({
+          where: { userId: String(ctx.from?.id) },
+        });
+        if (!checkUser) {
+          await ctx.scene.enter('create_product');
+          return;
+        }
+        ctx.reply(
+          'Siz Asosiy menyudasiz',
+          Markup.keyboard([
+            ['Hisobim', "hisob to'dirish"],
+            ['Prezentatsiya yaratish'],
+          ]).resize(),
+        );
       }
     }
   }
