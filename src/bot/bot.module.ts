@@ -30,7 +30,7 @@ import { CreatePresentation } from './scines/CreatePresentation.scince';
     {
       provide: Telegraf,
       useFactory: () => {
-        const token = '7798443665:AAFYkZNXsdc5yKPEpJvDCO3C3DFPMXRGD80';
+        const token = '8076038346:AAFq648VZXSHTmMtj0aZkNdelzJoWvi8Nco';
         if (!token) {
           throw new Error('BOT_TOKEN topilmadi! Iltimos, tokenni tekshiring.');
         }
