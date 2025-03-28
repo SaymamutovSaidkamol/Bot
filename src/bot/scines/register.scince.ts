@@ -31,6 +31,12 @@ export class RegisterScene {
   @WizardStep(2)
   async getPrice(@Ctx() ctx: Scenes.WizardContext, @Message() message: any) {
     date.lastName = message.text;
+
+    if (date.lastName === "/start") {
+      ctx.scene.leave();
+      return
+    }
+
     await ctx.reply('👤Familiyangizni kriting...');
     ctx.wizard.next();
   }
@@ -38,6 +44,11 @@ export class RegisterScene {
   @WizardStep(3)
   async getCount(@Ctx() ctx: Scenes.WizardContext, @Message() message: any) {
     date.firtsName = message.text;
+
+    if (date.firtsName === "/start") {
+      ctx.scene.leave();
+      return
+    }
     await ctx.reply(
       '📞Telefon raqamingizni kriting...',
       Markup.keyboard([

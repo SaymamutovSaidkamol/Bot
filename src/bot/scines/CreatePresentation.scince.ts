@@ -6,8 +6,8 @@ import {
 import { PrismaService } from 'src/prisma/prisma.service';
 import { Markup, Scenes } from 'telegraf';
 
-@Wizard('prodGet_scince')
-export class ProdGet_scince {
+@Wizard('create-presentation')
+export class CreatePresentation {
   constructor(private readonly prisma: PrismaService) {}
 
   @WizardStep(1)

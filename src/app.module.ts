@@ -8,7 +8,7 @@ import { PrismaModule } from './prisma/prisma.module';
 @Module({
   imports: [
     TelegrafModule.forRoot({
-      token: '8076038346:AAFq648VZXSHTmMtj0aZkNdelzJoWvi8Nco',
+      token: '7798443665:AAFYkZNXsdc5yKPEpJvDCO3C3DFPMXRGD80',
       middlewares: [session()],
     }),
     BotModule,

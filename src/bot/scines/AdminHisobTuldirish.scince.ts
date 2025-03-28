@@ -17,7 +17,6 @@ export class Admin_Panel_1 {
   @WizardStep(2)
   async CheckId(@Ctx() ctx: Scenes.WizardContext, @Message() message: any) {
     let UserID = message.text;
-    console.log(`Kiritilgan user ID: ${UserID}`);
 
     let checkUser = await this.prisma.users.findFirst({
       where: { userId: String(UserID) },
@@ -59,6 +58,7 @@ export class Admin_Panel_1 {
       return;
     }
 
+    // Foydalanuvchini bazadan olish
     let user = await this.prisma.users.findFirst({
       where: { id: userId },
     });
@@ -68,22 +68,23 @@ export class Admin_Panel_1 {
       return;
     }
 
-    user.balans = user.balans! + amount
+    // Yangi balansni hisoblash (eski + yangi qo‘shilgan)
+    let newBalance = (user.balans || 0) + amount;
 
+    // Foydalanuvchi balansini yangilash
     await this.prisma.users.update({
       where: { id: userId },
-      data: { balans: user.balans ? { increment: amount } : amount },
+      data: { balans: newBalance },
     });
 
-    console.log('amount', amount);
-
-    ctx.telegram.sendMessage(
+    // Foydalanuvchiga xabar yuborish
+    await ctx.telegram.sendMessage(
       tgId,
-      `✅ Sizning balansingizga *${amount} so'm* muvaffaqiyatli qo'shildi.`,
+      `✅ Sizning balansingizga *${amount} so'm* muvaffaqiyatli qo'shildi.\n\n📊 Jami balans: *${newBalance} so'm*`,
       { parse_mode: 'Markdown' },
     );
 
-    ctx.reply('✅ Foydalanuvchi balansiga pul qo‘shildi.');
+    ctx.reply(`✅ Foydalanuvchi balansiga *${amount} so‘m* qo‘shildi. Jami: *${newBalance} so‘m*`);
     ctx.scene.leave();
   }
 }

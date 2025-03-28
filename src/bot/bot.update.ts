@@ -24,17 +24,18 @@ export class BotUpdate {
       ctx.reply(
         'Admin Panelga Xush Kelibsiz😊',
         Markup.keyboard([
-          ['Userlar hisobini tuldirish', "Reklama Yaratish"]
+          ['Userlar hisobini tuldirish', 'Reklama Yaratish'],
+          ["Userlarni ko'rish"],
         ]).resize(),
       );
       return;
     }
-    if (!ChechRegister) {
+
+    if (statuses.includes(member.status) && !ChechRegister) {
       await ctx.scene.enter('create_product');
       return;
     }
-
-    if (statuses.includes(member.status)) {
+    if (statuses.includes(member.status) && ChechRegister) {
       ctx.reply(
         'Siz Asosiy menyudasiz',
         Markup.keyboard([
@@ -42,11 +43,13 @@ export class BotUpdate {
           ['Prezentatsiya yaratish'],
         ]).resize(),
       );
-    } else {
+    } 
+    else {
       await ctx.reply(
         'Assalomu Aleykum😊\nBotimizga Xush Kelibsiz!\nBotdan foydalanish uchun Iltimos Quyidagi amallarni bajaring',
         Markup.keyboard([['Boshlash']]).resize(),
       );
+      return;
     }
   }
 
@@ -87,11 +90,10 @@ export class BotUpdate {
       await ctx.scene.enter('create_product');
       return;
     }
-    if (ctx.text === "Userlar hisobini tuldirish") {
+    if (ctx.text === 'Userlar hisobini tuldirish') {
       await ctx.scene.enter('admin-panel-1');
       return;
     }
-
     if (ctx.text === 'Hisobim') {
       await ctx.scene.enter('prodGet_scince');
       return;
@@ -101,7 +103,15 @@ export class BotUpdate {
       return;
     }
     if (ctx.text === 'Prezentatsiya yaratish') {
-      await ctx.scene.enter('prodPatch_scince');
+      await ctx.scene.enter('create-presentation');
+      return;
+    }
+    if (ctx.text === "Userlarni ko'rish") {
+      await ctx.scene.enter('admin-get-user');
+      return;
+    }
+    if (ctx.text === 'Reklama Yaratish') {
+      await ctx.scene.enter('admin-create-reklama');
       return;
     }
   }
